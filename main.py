@@ -1,4 +1,3 @@
-from datetime import datetime
 import flet as ft
 import random
 import matplotlib.pyplot as plt
@@ -122,7 +121,7 @@ def plot_results(test_results):
 def generate_random_items(num_items, max_value, max_weight):
     return [Item(random.randint(1, max_value), random.randint(1, max_weight)) for _ in range(num_items)]
 
-def main(page: ft.Page, data_handler):
+def main(page: ft.Page):
     page.title = "Муравьиный алгоритм для задачи о рюкзаке"
     page.scroll = "adaptive"
 
@@ -130,7 +129,7 @@ def main(page: ft.Page, data_handler):
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
         # extended=True,
-        width=70,
+        width=50,
         min_extended_width=400,
         group_alignment=-1,
         destinations=[
@@ -146,15 +145,15 @@ def main(page: ft.Page, data_handler):
                 label="История",
             )
         ],
-        on_change=lambda e: go_to_history(e) if e.control.selected_index == 1 else go_to_main,
+        on_change=lambda e: print("Selected destination:", e.control.selected_index),
     )
 
+    data_handler = DataHandler()
+
     def go_to_history(e):
-        page.clean()
         page.go("/history")
 
     def go_to_main(e):
-        page.clean()
         page.go("/")
 
     def generate_items(e):
@@ -234,7 +233,6 @@ def main(page: ft.Page, data_handler):
         result_text.update()
 
         data_handler.add_test({
-            "date": datetime.now().strftime("%d.%m.%Y %H:%M:%S"),
             "items": data_handler.data["items"],
             "settings": {
                 "max_knapsack_weight": max_knapsack_weight,
@@ -274,6 +272,7 @@ def main(page: ft.Page, data_handler):
                           width=640,
                           height=480,
                           fit=ft.ImageFit.CONTAIN)
+    history_button = ft.ElevatedButton(text="История тестов", on_click=go_to_history)
 
     input_column = ft.Column([
         num_items_input,
@@ -281,8 +280,9 @@ def main(page: ft.Page, data_handler):
         max_weight_input,
         generate_button,
         items_list,
+        history_button  # Добавляем кнопку здесь
     ], alignment=ft.MainAxisAlignment.START,
-    height=700, width=250)
+    height=700)
 
     settings_column = ft.Column([
         max_knapsack_weight_input,
@@ -294,7 +294,7 @@ def main(page: ft.Page, data_handler):
         num_iterations_input,
         run_button
     ], alignment=ft.MainAxisAlignment.START,
-    height=700, width=250)
+    height=700)
 
     results_column = ft.Column([
         plot_image,
@@ -318,43 +318,11 @@ def history_page(page: ft.Page, data_handler):
     page.title = "История тестов"
     page.scroll = "adaptive"
 
-    rail = ft.NavigationRail(
-        selected_index=1,
-        label_type=ft.NavigationRailLabelType.ALL,
-        # extended=True,
-        width=70,
-        min_extended_width=400,
-        group_alignment=-1,
-        destinations=[
-            ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.icons.HOME_OUTLINED),
-                selected_icon_content=ft.Icon(ft.icons.HOME),
-                label="Главная",
-
-            ),
-            ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.icons.ACCESS_TIME),
-                selected_icon_content=ft.Icon(ft.icons.ACCESS_TIME_FILLED),
-                label="История",
-            )
-        ],
-        on_change=lambda e: go_to_main(e) if e.control.selected_index == 0 else go_to_history,
-    )
-
-    def go_to_history(e):
-        page.clean()
-        page.go("/history")
-
-    def go_to_main(e):
-        page.clean()
-        page.go("/")
-
     history_list = ft.Column(scroll="always", height=500)
 
     def load_history():
         history_list.controls.clear()
         for test in data_handler.data["tests"]:
-            date =  test["date"]
             items_str = ", ".join([f"({item['value']}, {item['weight']})" for item in test["items"][0:100]])
             settings_str = f"Вес рюкзака: {test['settings']['max_knapsack_weight']}, Муравьи: {test['settings']['num_ants']}, α: {test['settings']['alpha']}, β: {test['settings']['beta']}, ρ: {test['settings']['decay']}, Q: {test['settings']['Q']}, Итерации: {test['settings']['num_iterations']}"
             result_str = f"Лучшая стоимость: {test['result']['best_solution']['value']}, Общий вес: {test['result']['best_solution']['weight']}, Найдено на итерации: {test['result']['best_iteration']}"
@@ -362,19 +330,17 @@ def history_page(page: ft.Page, data_handler):
                                   src_base64=test['result']["plot"],
                                   fit=ft.ImageFit.CONTAIN)
             history_list.controls.append(ft.Row([
-            ft.Container(content=ft.Text(f"◷ {date}\nПредметы: {items_str}...\nНастройки: {settings_str}\nРезультат: {result_str}\n",width=600)),
+            ft.Container(content=ft.Text(f"Предметы: {items_str}...\nНастройки: {settings_str}\nРезультат: {result_str}\n",width=600)),
             ft.Container(content=plot_image)
         ]))
         history_list.update()
 
 
-    page.add(ft.Row([
-        rail,
-        ft.VerticalDivider(width=1),
-        ft.Column([
-            ft.Text("История тестов", size=24),
-            history_list])
-    ], expand = False, height = 700))
+    page.add(ft.Column([
+        ft.Text("История тестов", size=24),
+        history_list,
+        ft.ElevatedButton(text="Назад", on_click=lambda e: page.go("/"))
+    ]))
 
     # Вызов функции load_history после добавления элементов на страницу
     load_history()
@@ -386,10 +352,9 @@ def main_app(page: ft.Page):
         if page.route == "/history":
             history_page(page, data_handler)  # Передаем data_handler
         else:
-            main(page, data_handler)
+            main(page)
 
     page.on_route_change = route_change
-    page.clean()
     page.go(page.route)
 
 ft.app(target=main_app)
