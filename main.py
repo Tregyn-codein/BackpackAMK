@@ -374,7 +374,7 @@ def history_page(page: ft.Page, data_handler):
                                   src_base64=test['result']["plot"],
                                   fit=ft.ImageFit.CONTAIN)
             history_list.controls.append(ft.Row([
-            ft.Container(content=ft.Text(f"🕒 {date}\nПредметы: {items_str}...\n⚙️Настройки: {settings_str}\n📃Результат: {result_str}\n",width=600)),
+            ft.Container(content=ft.Text(f"🕒 {date}\n🗃️Предметы: {items_str}...\n⚙️Настройки: {settings_str}\n📃Результат: {result_str}\n",width=600)),
             ft.Container(content=plot_image)
         ]))
         history_list.update()
