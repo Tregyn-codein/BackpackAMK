@@ -260,8 +260,8 @@ def main(page: ft.Page, data_handler):
     num_items_input = ft.TextField(label="Количество предметов", value="100")
     max_value_input = ft.TextField(label="Максимальная стоимость", value="100")
     max_weight_input = ft.TextField(label="Максимальный вес", value="10")
-    generate_button = ft.ElevatedButton(text="Сгенерировать список", on_click=generate_items)
-    items_list = ft.Column(scroll="always", height=400)
+    generate_button = ft.ElevatedButton(text="🎲Сгенерировать список", on_click=generate_items)
+    items_list = ft.Column(scroll="always", height=400, width=250)
 
     max_knapsack_weight_input = ft.TextField(label="Максимальный вес рюкзака", value="500")
     num_ants_input = ft.TextField(label="Количество муравьев", value="50")
@@ -270,7 +270,7 @@ def main(page: ft.Page, data_handler):
     decay_input = ft.TextField(label="Коэффициент испарения феромонов (ρ)", value="0.5")
     Q_input = ft.TextField(label="Q", value="100")
     num_iterations_input = ft.TextField(label="Количество итераций", value="100")
-    run_button = ft.ElevatedButton(text="Запустить тест", on_click=run_tests)
+    run_button = ft.ElevatedButton(text="🚀Запустить алгоритм", on_click=run_tests)
     progress_text = ft.Text()
     result_text = ft.Text()
     plot_image = ft.Image(src="img/fireants-ants.gif",
@@ -374,7 +374,7 @@ def history_page(page: ft.Page, data_handler):
                                   src_base64=test['result']["plot"],
                                   fit=ft.ImageFit.CONTAIN)
             history_list.controls.append(ft.Row([
-            ft.Container(content=ft.Text(f"◷ {date}\nПредметы: {items_str}...\nНастройки: {settings_str}\nРезультат: {result_str}\n",width=600)),
+            ft.Container(content=ft.Text(f"🕒 {date}\nПредметы: {items_str}...\n⚙️Настройки: {settings_str}\n📃Результат: {result_str}\n",width=600)),
             ft.Container(content=plot_image)
         ]))
         history_list.update()
