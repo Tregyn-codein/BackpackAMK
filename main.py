@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import io
 import base64
 import json
+
+from flet_core import theme
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 class Item:
@@ -124,7 +126,8 @@ def generate_random_items(num_items, max_value, max_weight):
 
 def main(page: ft.Page, data_handler):
     page.title = "Муравьиный алгоритм для задачи о рюкзаке"
-    page.scroll = "adaptive"
+    page.scroll = "None"
+
 
     rail = ft.NavigationRail(
         selected_index=0,
@@ -305,7 +308,16 @@ def main(page: ft.Page, data_handler):
     ], alignment=ft.MainAxisAlignment.START,
     height=700)
 
-    page.add(ft.Row([rail,
+    page.add(
+        ft.Row(
+            [
+                ft.WindowDragArea(
+                    ft.Container(ft.Text("Муравьиный алгоритм для задачи о рюкзаке"),
+                                padding=10), expand=True),
+                ft.IconButton(ft.icons.CLOSE, on_click=lambda _: page.window_close())
+            ]
+        ),
+        ft.Row([rail,
                             ft.VerticalDivider(width=1),
                             input_column,
                             settings_column,
@@ -316,7 +328,7 @@ def main(page: ft.Page, data_handler):
 
 def history_page(page: ft.Page, data_handler):
     page.title = "История тестов"
-    page.scroll = "adaptive"
+    page.scroll = "None"
 
     rail = ft.NavigationRail(
         selected_index=1,
@@ -349,7 +361,7 @@ def history_page(page: ft.Page, data_handler):
         page.clean()
         page.go("/")
 
-    history_list = ft.Column(scroll="always", height=500)
+    history_list = ft.Column(scroll="always", height=700)
 
     def load_history():
         history_list.controls.clear()
@@ -368,11 +380,19 @@ def history_page(page: ft.Page, data_handler):
         history_list.update()
 
 
-    page.add(ft.Row([
+    page.add(
+        ft.Row(
+            [
+                ft.WindowDragArea(
+                    ft.Container(ft.Text("История тестов"),
+                                 padding=10), expand=True),
+                ft.IconButton(ft.icons.CLOSE, on_click=lambda _: page.window_close())
+            ]
+        ),
+        ft.Row([
         rail,
         ft.VerticalDivider(width=1),
         ft.Column([
-            ft.Text("История тестов", size=24),
             history_list])
     ], expand = False, height = 700))
 
@@ -380,6 +400,16 @@ def history_page(page: ft.Page, data_handler):
     load_history()
 
 def main_app(page: ft.Page):
+    page.spacing = 20
+    page.window_title_bar_hidden = True
+    page.window_title_bar_buttons_hidden = True
+    page.window_maximizable = False
+    page.window_resizable = False
+    page.window_left = 400
+    page.window_top = 200
+    page.window_height = 790
+    page.theme = theme.Theme(color_scheme_seed="brown")
+
     data_handler = DataHandler()  # Создаем экземпляр DataHandler
 
     def route_change(route):
