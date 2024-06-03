@@ -365,7 +365,7 @@ def history_page(page: ft.Page, data_handler):
 
     def load_history():
         history_list.controls.clear()
-        for test in data_handler.data["tests"]:
+        for test in data_handler.data["tests"][::-1]:
             date =  test["date"]
             items_str = ", ".join([f"({item['value']}, {item['weight']})" for item in test["items"][0:100]])
             settings_str = f"Вес рюкзака: {test['settings']['max_knapsack_weight']}, Муравьи: {test['settings']['num_ants']}, α: {test['settings']['alpha']}, β: {test['settings']['beta']}, ρ: {test['settings']['decay']}, Q: {test['settings']['Q']}, Итерации: {test['settings']['num_iterations']}"
