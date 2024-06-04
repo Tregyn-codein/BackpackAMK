@@ -1,3 +1,5 @@
+import os
+import sys
 from datetime import datetime
 import flet as ft
 import random
@@ -8,6 +10,16 @@ import json
 
 from flet_core import theme
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class Item:
     def __init__(self, value, weight):
@@ -273,7 +285,7 @@ def main(page: ft.Page, data_handler):
     run_button = ft.ElevatedButton(text="🚀Запустить алгоритм", on_click=run_tests)
     progress_text = ft.Text()
     result_text = ft.Text()
-    plot_image = ft.Image(src="assets/fireants-ants.gif",
+    plot_image = ft.Image(src=resource_path("fireants-ants.gif"),
                           width=640,
                           height=480,
                           fit=ft.ImageFit.CONTAIN)
