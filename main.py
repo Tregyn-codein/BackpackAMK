@@ -273,7 +273,7 @@ def main(page: ft.Page, data_handler):
     run_button = ft.ElevatedButton(text="🚀Запустить алгоритм", on_click=run_tests)
     progress_text = ft.Text()
     result_text = ft.Text()
-    plot_image = ft.Image(src="img/fireants-ants.gif",
+    plot_image = ft.Image(src="assets/fireants-ants.gif",
                           width=640,
                           height=480,
                           fit=ft.ImageFit.CONTAIN)
@@ -313,7 +313,7 @@ def main(page: ft.Page, data_handler):
             [
                 ft.WindowDragArea(
                     ft.Container(ft.Text("Муравьиный алгоритм для задачи о рюкзаке"),
-                                padding=10), expand=True),
+                                padding=10), expand=True, maximizable=False),
                 ft.IconButton(ft.icons.CLOSE, on_click=lambda _: page.window_close())
             ]
         ),
